@@ -1,0 +1,25 @@
+---
+import type { Contacts } from "../types/resume";
+interface Props {
+  name: string;
+  title: string;
+  location: string;
+  contacts: Contacts;
+  summary: string;
+}
+const { name, title, location, contacts, summary } = Astro.props as Props;
+---
+<section id="hero" style="position:relative">
+  <header>
+    <h1 data-testid="hero-name">{name}</h1>
+    <p class="subtitle">{title} – {location}</p>
+    <p class="contacts">
+      <strong>Email:</strong> <a href={"mailto:"+contacts.email}>{contacts.email}</a> ・
+      <strong>Phone:</strong> <a href={"tel:"+contacts.phone}>{contacts.phone}</a> ・
+      <strong>LinkedIn:</strong> <a href={contacts.linkedin} target="_blank" rel="noopener">View Profile</a> ・
+      <strong>GitHub:</strong> <a href={contacts.github} target="_blank" rel="noopener">GitHub</a>
+    </p>
+    <p class="summary">{summary}</p>
+    <button type="button" class="theme-toggle" data-testid="theme-toggle" aria-label="Toggle dark/light theme">🌙/☀️</button>
+  </header>
+</section>

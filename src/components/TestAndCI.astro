@@ -1,0 +1,42 @@
+---
+interface Stat {
+  label: string;
+  value: string | number;
+}
+const stats: Stat[] = [
+  { label: "Unit Tests (Vitest)", value: 12 },
+  { label: "E2E (Playwright)", value: 3 },
+  { label: "Lint Issues", value: 0 },
+  { label: "Type Errors", value: 0 },
+];
+---
+
+<section class="mx-auto max-w-5xl my-12 px-4">
+  <h2 class="text-2xl font-semibold tracking-tight">Tests & CI</h2>
+  <p class="text-sm opacity-80 mt-1">
+    This site is tested in CI on every push: lint ➜ typecheck ➜ unit ➜ e2e ➜ build ➜ deploy.
+  </p>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+    {stats.map((s) => (
+      <div class="rounded-2xl border p-4 shadow-sm">
+        <div class="text-sm opacity-70">{s.label}</div>
+        <div class="text-3xl font-bold mt-1">{s.value}</div>
+      </div>
+    ))}
+  </div>
+
+  <div class="mt-8 rounded-2xl border p-4">
+    <h3 class="font-semibold">CI Status</h3>
+    <p class="text-sm opacity-80">
+      GitHub Actions runs the pipeline on <code>push</code> and PRs. Playwright verifies key resume sections render.
+    </p>
+    <a
+      href="https://github.com/Dag86/qa-resume-astro/actions"
+      class="inline-flex items-center gap-2 mt-3 text-sm underline"
+      target="_blank" rel="noreferrer"
+    >
+      View workflow runs →
+    </a>
+  </div>
+</section>

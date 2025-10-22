@@ -1,0 +1,8 @@
+---
+interface Props { degree: string; institution: string; }
+const { degree, institution } = Astro.props as Props;
+---
+<section id="education">
+  <h2>Education</h2>
+  <p><strong>{degree}</strong> – {institution}</p>
+</section>

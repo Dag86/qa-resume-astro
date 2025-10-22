@@ -1,0 +1,98 @@
+
+{
+  "name": "Amir Choshov",
+  "title": "QA Engineer | Web & Mobile Automation",
+  "location": "Santa Clarita, CA",
+  "contacts": {
+    "phone": "(661) 424-7040",
+    "email": "amirchoshov@gmail.com",
+    "linkedin": "https://linkedin.com/in/amirchoshov",
+    "github": "https://github.com/Dag86"
+  },
+  "summary": "Detail-oriented QA Engineer with 7+ years in web and mobile application testing, specializing in RBAC validation, end-to-end automation, and risk-based testing. Skilled in building test strategies integrating manual and automated coverage to accelerate release cycles. Experienced in collaborating with cross-functional teams to ensure secure, stable, and high-quality deployments in Agile environments. Passionate about AI-assisted testing, CI/CD optimization, and continuous quality improvements.",
+  "highlights": [
+    "Manual & Exploratory Testing",
+    "RBAC & Authentication Testing",
+    "Playwright & Cypress Automation",
+    "Data Validation & SQL Verification",
+    "AI-Assisted QA & Multi-Agent Testing",
+    "CI/CD & Agile Delivery"
+  ],
+  "skills": {
+    "languages": ["TypeScript", "JavaScript", "Python", "SQL"],
+    "frameworks": ["Playwright", "Cypress", "k6", "Postman"],
+    "tools": ["JIRA", "TestRail", "Xray", "GitHub Actions", "Jenkins", "AWS"],
+    "testingTypes": ["Functional", "Regression", "Exploratory", "API", "UAT"],
+    "aiTools": ["Ollama", "Phi", "Mistral", "Phi-mini"]
+  },
+  "experience": [
+    {
+      "company": "Zenar Studio Inc.",
+      "role": "Remote QA Engineer (Client-Based Projects)",
+      "period": "March 2018 – Present",
+      "projects": [
+        {
+          "client": "SnapClinical / Labcorp",
+          "title": "Senior QA Engineer (Web & Mobile)",
+          "duration": "2019 – Present",
+          "achievements": [
+            "Designed and executed test plans for RBAC and authentication workflows across multi-role healthcare platforms.",
+            "Validated authorization logic, token-based sessions, and DocuSign e-signature integrations.",
+            "Conducted security-adjacent regression tests ensuring HIPAA compliance and eliminating privilege escalation paths.",
+            "Introduced risk-based prioritization, reducing high-severity bug escape rates by 35%.",
+            "Contributed to Playwright automation pipelines, integrating E2E and regression coverage into CI/CD."
+          ],
+          "stack": ["Playwright", "TypeScript", "Postgres", "GitHub Actions"]
+        },
+        {
+          "client": "E-Commerce Web Application",
+          "title": "QA Engineer",
+          "duration": "2018 – 2019",
+          "achievements": [
+            "Performed cross-browser functional testing across Chrome, Safari, Firefox, and Edge.",
+            "Developed detailed test documentation to streamline triage and root cause analysis.",
+            "Supported Cypress UI automation for regression cycles, reducing manual retests by 40%."
+          ],
+          "stack": ["Cypress", "JavaScript", "Chrome DevTools"]
+        },
+        {
+          "client": "Airtime (Social Media App)",
+          "title": "QA Tester",
+          "duration": "2018",
+          "achievements": [
+            "Executed smoke and exploratory testing on iOS and Android clients.",
+            "Collaborated with developers to debug UI/UX inconsistencies and improved issue resolution speed by 20%."
+          ],
+          "stack": ["JIRA", "Android Studio", "Xcode"]
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "AI-Powered QA Assistant (Local Multi-Agent System)",
+      "description": "Developed a chain-prompt testing assistant with multiple QA agents using Ollama and small models (Phi/Mistral) for test generation and feature clarification.",
+      "impact": "Demonstrated expertise in AI-driven QA pipelines and lightweight on-device model integration.",
+      "techStack": ["Python", "Ollama", "Phi", "Mistral"],
+      "focus": ["Test Case Generation", "Chain-of-Thought QA", "On-Device AI Testing"]
+    },
+    {
+      "name": "Full-Stack QA Framework (Playwright + k6 + TypeScript)",
+      "description": "Created a modular automation harness for API/UI testing and performance probes.",
+      "impact": "Reduced flakiness by 70% and CI runtime by 55%.",
+      "techStack": ["TypeScript", "ES6", "Playwright", "k6", "GitHub Actions"],
+      "focus": ["Automation Infrastructure", "CI Optimization", "Performance Testing"]
+    }
+  ],
+  "education": {
+    "degree": "B.A. in Linguistics",
+    "institution": "DSU"
+  },
+  "strengths": [
+    "Analytical, detail-oriented, and strong at identifying edge cases early.",
+    "Excellent communicator with cross-functional teams.",
+    "Process-driven and passionate about refining QA frameworks and test design."
+  ],
+  "lastUpdated": "2025-10-20"
+}
+

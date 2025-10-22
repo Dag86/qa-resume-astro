@@ -1,0 +1,22 @@
+---
+import type { ExperienceItem } from "../types/resume";
+interface Props { jobs: ExperienceItem[]; }
+const { jobs } = Astro.props as Props;
+---
+
+<section id="experience">
+  <h2>Experience</h2>
+  {jobs.map(job => (
+    <article class="experience-item">
+      <h3>{job.company}</h3>
+      <p><strong>{job.role}</strong> – <em>{job.period}</em></p>
+      {job.projects.map(p => (
+        <div class="project-entry">
+          <h4>{p.client} – {p.title} <span>({p.duration})</span></h4>
+          <ul>{p.achievements.map(a => <li>{a}</li>)}</ul>
+          <p class="tech-stack"><em>Tech Stack:</em> {p.stack.join(", ")}</p>
+        </div>
+      ))}
+    </article>
+  ))}
+</section>

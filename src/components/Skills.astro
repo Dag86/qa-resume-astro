@@ -1,0 +1,15 @@
+---
+import type { Skills as SkillsType } from "../types/resume";
+interface Props { data: SkillsType; }
+const { data } = Astro.props as Props;
+---
+<section id="skills">
+  <h2>Skills</h2>
+  <dl class="skills-list">
+    <dt>Languages</dt><dd>{data.languages.join(", ")}</dd>
+    <dt>Frameworks</dt><dd>{data.frameworks.join(", ")}</dd>
+    <dt>Tools</dt><dd>{data.tools.join(", ")}</dd>
+    <dt>Testing Types</dt><dd>{data.testingTypes.join(", ")}</dd>
+    <dt>AI Tools</dt><dd>{data.aiTools.join(", ")}</dd>
+  </dl>
+</section>

@@ -1,16 +1,139 @@
 ---
+import resume from "../data/resume.json";
+import type { Resume } from "../types/resume";
+const data = resume as Resume;
 
+import Hero from "../components/Hero.astro";
+import Highlights from "../components/Highlights.astro";
+import Skills from "../components/Skills.astro";
+import Experience from "../components/Experience.astro";
+import Projects from "../components/Projects.astro";
+import Education from "../components/Education.astro";
+import Strengths from "../components/Strengths.astro";
+import TestAndCI from "../components/TestAndCI.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+// JSON-LD object
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: data.name,
+  jobTitle: data.title,
+  email: data.contacts.email,
+  telephone: data.contacts.phone,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: data.location
+  },
+  sameAs: [data.contacts.linkedin, data.contacts.github]
+};
 ---
 
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Amir Choshov – QA Engineer (Web & Mobile Automation)</title>
+    <meta
+      name="description"
+      content="QA Engineer specializing in RBAC, automation, and CI/CD."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Apply stored/OS theme early -->
+    <script>
+      (function initTheme() {
+        try {
+          const t = localStorage.getItem("theme");
+          const prefersLight = matchMedia("(prefers-color-scheme: light)").matches;
+          document.documentElement.setAttribute(
+            "data-theme",
+            t || (prefersLight ? "light" : "dark")
+          );
+        } catch { /* ignore */ void 0; }
+      })();
+    </script>
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="skip-to-content" href="#main">Skip to content</a>
+
+    <main id="main" tabindex="-1">
+      <Hero
+        name={data.name}
+        title={data.title}
+        location={data.location}
+        contacts={data.contacts}
+        summary={data.summary}
+      />
+      <Highlights items={data.highlights} />
+      <Skills data={data.skills} />
+      <Experience jobs={data.experience} />
+      <Projects projects={data.projects} />
+      <Education
+        degree={data.education.degree}
+        institution={data.education.institution}
+      />
+      <Strengths items={data.strengths} />
+      <TestAndCI />
+    </main>
+
+    <Footer lastUpdated={data.lastUpdated} />
+
+    <!-- Tiny client behavior: theme toggle + mini test runner -->
+    <script defer>
+      // Theme toggle
+      const btn = document.querySelector('[data-testid="theme-toggle"]');
+      if (btn) {
+        btn.addEventListener("click", () => {
+          const cur = document.documentElement.getAttribute("data-theme") || "dark";
+          const next = cur === "dark" ? "light" : "dark";
+          document.documentElement.setAttribute("data-theme", next);
+          try { localStorage.setItem("theme", next); } catch {/* ignore */ void 0;}
+        });
+      }
+
+      // Mini test runner
+      const run = document.querySelector('[data-testid="run-tests"]');
+      const log = document.querySelector('[data-testid="test-log"]');
+      if (run && log) {
+        run.addEventListener("click", () => {
+          log.innerHTML = "";
+          run.disabled = true;
+          const tests = [
+            { n: "Login redirects", r: "PASS" },
+            { n: "RBAC for Admin", r: "PASS" },
+            { n: "Report export", r: "FAIL" }
+          ];
+          tests.forEach((t, i) => {
+            setTimeout(() => {
+              const li = document.createElement("li");
+              li.textContent = `${t.n} → ${t.r}`;
+              li.className = t.r.toLowerCase();
+              log.appendChild(li);
+
+              if (i === tests.length - 1) {
+                const passed = tests.filter((x) => x.r === "PASS").length;
+                const s = document.createElement("li");
+                s.className = "summary";
+                s.textContent = `Summary: ${passed}/${tests.length} tests passed.`;
+                log.appendChild(s);
+                run.disabled = false;
+              }
+            }, 200 * (i + 1));
+          });
+        });
+      } else {
+        console.warn(
+          "[MiniTestRunner] Missing element(s):" +
+          (!run ? ' [data-testid="run-tests"]' : "") +
+          (!log ? ' [data-testid="test-log"]' : "")
+        );
+      }
+    </script>
+  </body>
 </html>

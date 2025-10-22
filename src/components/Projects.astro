@@ -1,0 +1,18 @@
+---
+import type { Project } from "../types/resume";
+interface Props { projects: Project[]; }
+const { projects } = Astro.props as Props;
+---
+
+<section id="projects">
+  <h2>Projects</h2>
+  {projects.map(pr => (
+    <article class="project-item">
+      <h3>{pr.name}</h3>
+      <p>{pr.description}</p>
+      <p><strong>Impact:</strong> {pr.impact}</p>
+      <p><strong>Tech Stack:</strong> {pr.techStack.join(", ")}</p>
+      <p><strong>Focus:</strong> {pr.focus.join(", ")}</p>
+    </article>
+  ))}
+</section>
