@@ -1,7 +1,9 @@
 name: CI
+
 on:
-  push: { branches: [ main, develop ] }
-  pull_request: {}
+  push:
+    branches: [ main, develop ]
+  pull_request:
 
 permissions:
   contents: read
@@ -11,21 +13,26 @@ permissions:
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with: { version: 9 }
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
 
-      - name: Install deps
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Approve builds (CI)
+      - name: Approve native build scripts (CI)
         run: pnpm approve-builds --yes
 
       - name: Lint
@@ -34,20 +41,25 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Unit tests
+      - name: Unit tests (Vitest)
         run: pnpm test
 
-      - name: Build
+      - name: Build site (Astro)
         run: pnpm build
 
-      - name: Install Playwright Browsers
+      - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: E2E tests
-        env: { CI: "1" }
-        run: pnpm e2e
+      - name: E2E tests (Playwright against preview)
+        env:
+          CI: '1'
+        run: |
+          pnpm preview & npx wait-on http://localhost:4321
+          pnpm e2e
+        # collect traces/videos if tests fail
+        if: success() || failure()
 
-      # Optional: GitHub Pages deploy for main
+      # --- Optional: Deploy to GitHub Pages from main ---
       - name: Setup Pages
         if: github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v5
@@ -55,7 +67,8 @@ jobs:
       - name: Upload artifact
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
-        with: { path: ./dist }
+        with:
+          path: ./dist
 
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'
