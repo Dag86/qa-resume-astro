@@ -2,41 +2,77 @@ name: CI
 
 on:
   push:
+    branches: [ main, develop ]
   pull_request:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
-  build-test:
+  build-test-deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Install pnpm CLI on PATH
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      # Node + cache (uses pnpm-lock.yaml)
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-          run_install: false
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build + Bundle Guard
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit tests (Vitest)
+        run: pnpm test
+
+      # Build + enforce ≤60KB gz client JS
+      - name: Build & bundle guard
         run: pnpm ci:build
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps
 
-      - name: Start preview & wait for server
-        run: pnpm ci:start
-
-      - name: Run E2E tests
+      - name: E2E tests (Playwright against preview)
         env:
+          CI: '1'
           PLAYWRIGHT_BASE_URL: http://127.0.0.1:4321
-        run: pnpm ci:e2e
+        run: |
+          pnpm ci:start
+          pnpm ci:e2e
+
+      # --- Deploy to GitHub Pages (main only) ---
+      - name: Setup Pages
+        if: github.ref == 'refs/heads/main'
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: actions/deploy-pages@v4

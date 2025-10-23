@@ -13,12 +13,10 @@
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
 
-    
     "ci:build": "pnpm lint && pnpm typecheck && pnpm build && pnpm bundle:guard",
     "ci:start": "pnpm preview & pnpx wait-on http://127.0.0.1:4321",
     "ci:e2e": "pnpm e2e",
 
-    
     "bundle:guard": "node scripts/bundle-guard.mjs"
   },
   "dependencies": {
