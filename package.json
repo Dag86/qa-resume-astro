@@ -5,14 +5,21 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "astro preview --host --port 4321",
     "lint": "eslint . --ext .js,.ts,.tsx,.astro",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
-    "ci": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm e2e"
+
+    
+    "ci:build": "pnpm lint && pnpm typecheck && pnpm build && pnpm bundle:guard",
+    "ci:start": "pnpm preview & pnpx wait-on http://127.0.0.1:4321",
+    "ci:e2e": "pnpm e2e",
+
+    
+    "bundle:guard": "node scripts/bundle-guard.mjs"
   },
   "dependencies": {
     "astro": "^5.14.7"
@@ -32,6 +39,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.2",
     "vite": "^7.1.11",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "wait-on": "^9.0.1"
   }
 }

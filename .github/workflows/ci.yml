@@ -2,74 +2,40 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
   pull_request:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
-  build-test-deploy:
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: pnpm
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Approve native build scripts (CI)
-        run: pnpm approve-builds --yes
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Typecheck
-        run: pnpm typecheck
-
-      - name: Unit tests (Vitest)
-        run: pnpm test
-
-      - name: Build site (Astro)
-        run: pnpm build
+      - name: Build + Bundle Guard
+        run: pnpm ci:build
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps
 
-      - name: E2E tests (Playwright against preview)
+      - name: Start preview & wait for server
+        run: pnpm ci:start
+
+      - name: Run E2E tests
         env:
-          CI: '1'
-        run: |
-          pnpm preview & npx wait-on http://localhost:4321
-          pnpm e2e
-        # collect traces/videos if tests fail
-        if: success() || failure()
-
-      # --- Optional: Deploy to GitHub Pages from main ---
-      - name: Setup Pages
-        if: github.ref == 'refs/heads/main'
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        if: github.ref == 'refs/heads/main'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
-
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main'
-        uses: actions/deploy-pages@v4
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:4321
+        run: pnpm ci:e2e
