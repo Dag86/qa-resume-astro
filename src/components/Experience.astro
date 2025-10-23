@@ -1,22 +1,49 @@
 ---
-import type { ExperienceItem } from "../types/resume";
-interface Props { jobs: ExperienceItem[]; }
-const { jobs } = Astro.props as Props;
+import type { ExperienceItem, ProjectExp } from "../types/resume";
+
+/** Exported so parent components can type-check prop usage */
+export interface Props {
+  experience: ExperienceItem[];
+}
+
+const { experience } = Astro.props as Props;
 ---
 
-<section id="experience">
-  <h2>Experience</h2>
-  {jobs.map(job => (
-    <article class="experience-item">
-      <h3>{job.company}</h3>
-      <p><strong>{job.role}</strong> – <em>{job.period}</em></p>
-      {job.projects.map(p => (
-        <div class="project-entry">
-          <h4>{p.client} – {p.title} <span>({p.duration})</span></h4>
-          <ul>{p.achievements.map(a => <li>{a}</li>)}</ul>
-          <p class="tech-stack"><em>Tech Stack:</em> {p.stack.join(", ")}</p>
-        </div>
-      ))}
-    </article>
-  ))}
+<section id="experience" aria-labelledby="exp-h">
+  <h2 id="exp-h" class="section-title">Experience</h2>
+
+  
+    {experience.map((job: ExperienceItem) => (
+      <article class="tl-item card" data-testid="experience-item">
+        <header style="display:flex;justify-content:space-between;gap:.75rem;flex-wrap:wrap;">
+          <h3 style="margin:0">{job.role} — {job.company}</h3>
+          <span class="muted">{job.period}</span>
+        </header>
+
+        {/* Each role contains nested projects per your schema */}
+        {job.projects.map((p: ProjectExp) => (
+          <section style="margin-top:.75rem;">
+            <h4 style="margin:0 0 .25rem 0">
+              {p.title}{p.client ? ` — ${p.client}` : ""}
+            </h4>
+            {p.duration && <p class="muted" style="margin:.1rem 0 .4rem 0">{p.duration}</p>}
+
+            {/* Achievements list */}
+            {p.achievements?.length ? (
+              <ul style="margin:.25rem 0 0 1rem;">
+                {p.achievements.map((a: string) => <li>{a}</li>)}
+              </ul>
+            ) : null}
+
+            {/* Tech stack chips */}
+            {p.stack?.length ? (
+              <div class="chips" style="margin-top:.6rem;">
+                {p.stack.map((s: string) => <span class="chip">{s}</span>)}
+              </div>
+            ) : null}
+          </section>
+        ))}
+      </article>
+    ))}
+  </div>
 </section>

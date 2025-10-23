@@ -1,10 +1,10 @@
 ---
-interface Props { items: string[]; }
+export interface Props { items: string[] }
 const { items } = Astro.props as Props;
 ---
-<section id="highlights">
-  <h2>Highlights</h2>
-  <ul>
-    {items.map((i) => <li>{i}</li>)}
-  </ul>
+<section id="highlights" class="card" aria-labelledby="high-h">
+  <h2 id="high-h" class="section-title">Highlights</h2>
+  <div class="chips">
+    {items.map((h: string) => <span class="chip" data-testid="highlight-chip">{h}</span>)}
+  </div>
 </section>

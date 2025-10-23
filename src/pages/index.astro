@@ -13,6 +13,7 @@ import Strengths from "../components/Strengths.astro";
 import TestAndCI from "../components/TestAndCI.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
+import MiniTestRunner from "../components/MiniTestRunner.astro";
 
 // JSON-LD object
 const jsonLd = {
@@ -24,9 +25,9 @@ const jsonLd = {
   telephone: data.contacts.phone,
   address: {
     "@type": "PostalAddress",
-    addressLocality: data.location
+    addressLocality: data.location,
   },
-  sameAs: [data.contacts.linkedin, data.contacts.github]
+  sameAs: [data.contacts.linkedin, data.contacts.github],
 };
 ---
 
@@ -41,23 +42,38 @@ const jsonLd = {
       content="QA Engineer specializing in RBAC, automation, and CI/CD."
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Inter Variable: fast, readable, modern. One font keeps payload tiny. -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Apply stored/OS theme early -->
     <script>
       (function initTheme() {
         try {
           const t = localStorage.getItem("theme");
-          const prefersLight = matchMedia("(prefers-color-scheme: light)").matches;
+          const prefersLight = matchMedia(
+            "(prefers-color-scheme: light)",
+          ).matches;
           document.documentElement.setAttribute(
             "data-theme",
-            t || (prefersLight ? "light" : "dark")
+            t || (prefersLight ? "light" : "dark"),
           );
-        } catch { /* ignore */ void 0; }
+        } catch {
+          /* ignore */ void 0;
+        }
       })();
     </script>
 
     <!-- JSON-LD -->
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(jsonLd)}
+    />
   </head>
   <body>
     <a class="skip-to-content" href="#main">Skip to content</a>
@@ -70,9 +86,12 @@ const jsonLd = {
         contacts={data.contacts}
         summary={data.summary}
       />
+
       <Highlights items={data.highlights} />
       <Skills data={data.skills} />
-      <Experience jobs={data.experience} />
+
+      <Experience experience={data.experience} />
+
       <Projects projects={data.projects} />
       <Education
         degree={data.education.degree}
@@ -80,60 +99,145 @@ const jsonLd = {
       />
       <Strengths items={data.strengths} />
       <TestAndCI />
+      
     </main>
 
     <Footer lastUpdated={data.lastUpdated} />
 
-    <!-- Tiny client behavior: theme toggle + mini test runner -->
     <script defer>
-      // Theme toggle
-      const btn = document.querySelector('[data-testid="theme-toggle"]');
-      if (btn) {
-        btn.addEventListener("click", () => {
-          const cur = document.documentElement.getAttribute("data-theme") || "dark";
-          const next = cur === "dark" ? "light" : "dark";
-          document.documentElement.setAttribute("data-theme", next);
-          try { localStorage.setItem("theme", next); } catch {/* ignore */ void 0;}
-        });
-      }
+  // Theme toggle
+  const btn = document.querySelector('[data-testid="theme-toggle"]');
+  if (btn) {
+    btn.addEventListener("click", () => {
+      const cur = document.documentElement.getAttribute("data-theme") || "dark";
+      const next = cur === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch {}
+    });
+  }
 
-      // Mini test runner
-      const run = document.querySelector('[data-testid="run-tests"]');
-      const log = document.querySelector('[data-testid="test-log"]');
-      if (run && log) {
-        run.addEventListener("click", () => {
-          log.innerHTML = "";
-          run.disabled = true;
-          const tests = [
-            { n: "Login redirects", r: "PASS" },
-            { n: "RBAC for Admin", r: "PASS" },
-            { n: "Report export", r: "FAIL" }
-          ];
-          tests.forEach((t, i) => {
-            setTimeout(() => {
-              const li = document.createElement("li");
-              li.textContent = `${t.n} → ${t.r}`;
-              li.className = t.r.toLowerCase();
-              log.appendChild(li);
+  // -------- Mini test runner + report export (JSON + JUnit) ----------
+  const runBtn = document.querySelector('[data-testid="run-tests"]');
+  const log = document.querySelector('[data-testid="test-log"]');
+  const live = document.querySelector('[data-testid="aria-live"]');
+  const exportJsonBtn = document.querySelector('[data-testid="export-report"]');
+  const exportJunitBtn = document.querySelector('[data-testid="export-junit"]');
 
-              if (i === tests.length - 1) {
-                const passed = tests.filter((x) => x.r === "PASS").length;
-                const s = document.createElement("li");
-                s.className = "summary";
-                s.textContent = `Summary: ${passed}/${tests.length} tests passed.`;
-                log.appendChild(s);
-                run.disabled = false;
-              }
-            }, 200 * (i + 1));
+  /** Keep the latest run here for export */
+  let lastRun = null;
+
+  function download(name, mime, text) {
+    const blob = new Blob([text], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function toJUnitXML(report) {
+    // Minimal JUnit XML for CI consumption
+    const total = report.tests.length;
+    const failures = report.tests.filter(t => t.status === "FAIL").length;
+    const timeSec = (report.durationMs / 1000).toFixed(3);
+    const cases = report.tests.map(t => {
+      const tSec = (t.durationMs / 1000).toFixed(3);
+      const fail = t.status === "FAIL" ? `<failure message="Assertion failed"/>` : "";
+      return `<testcase classname="MiniRunner" name="${t.name}" time="${tSec}">${fail}</testcase>`;
+    }).join("");
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="MiniRunner" tests="${total}" failures="${failures}" time="${timeSec}">
+${cases}
+</testsuite>`;
+  }
+
+  function enableExports(enabled) {
+    if (exportJsonBtn) exportJsonBtn.disabled = !enabled;
+    if (exportJunitBtn) exportJunitBtn.disabled = !enabled;
+  }
+
+  if (runBtn && log && live) {
+    runBtn.addEventListener("click", () => {
+      log.innerHTML = "";
+      runBtn.disabled = true;
+      enableExports(false);
+
+      const scriptVersion = 1; // bump if you change the format
+      const startedAt = new Date();
+      live.textContent = "Starting 3 tests…";
+
+      const tests = [
+        { name: "Login redirects", delayMs: 300, status: "PASS" },
+        { name: "RBAC for Admin", delayMs: 340, status: "PASS" },
+        { name: "Report export",  delayMs: 320, status: "FAIL" }
+      ];
+
+      let pass = 0;
+      const results = [];
+
+      tests.forEach((t, i) => {
+        setTimeout(() => {
+          const started = performance.now();
+          // In a real runner you'd execute; here it's fixed status:
+          const ok = t.status === "PASS";
+          const li = document.createElement("li");
+          li.textContent = `${t.name} → ${t.status}`;
+          li.className = ok ? "pass" : "fail";
+          log.appendChild(li);
+          live.textContent = `${t.name} ${ok ? "passed" : "failed"}.`;
+          if (ok) pass++;
+
+          const ended = performance.now();
+          results.push({
+            name: t.name,
+            status: t.status,
+            durationMs: Math.max(1, Math.round(ended - started))
           });
-        });
-      } else {
-        console.warn(
-          "[MiniTestRunner] Missing element(s):" +
-          (!run ? ' [data-testid="run-tests"]' : "") +
-          (!log ? ' [data-testid="test-log"]' : "")
-        );
-      }
-    </script>
-  </body>
-</html>
+
+          if (i === tests.length - 1) {
+            const summary = document.createElement("li");
+            summary.className = "summary";
+            summary.textContent = `Summary: ${pass}/${tests.length} tests passed.`;
+            log.appendChild(summary);
+            live.textContent = summary.textContent;
+
+            const endedAt = new Date();
+            const durationMs = endedAt - startedAt;
+
+            lastRun = {
+              schema: "mini-runner@v1",
+              scriptVersion,
+              startedAt: startedAt.toISOString(),
+              endedAt: endedAt.toISOString(),
+              durationMs,
+              totals: { passed: pass, failed: tests.length - pass, total: tests.length },
+              tests: results
+            };
+
+            runBtn.disabled = false;
+            enableExports(true);
+          }
+        }, 220 * (i + 1));
+      });
+    });
+  }
+
+  if (exportJsonBtn) {
+    exportJsonBtn.addEventListener("click", () => {
+      if (!lastRun) return;
+      const name = `test-report-${new Date(lastRun.startedAt).toISOString().replace(/[:.]/g, "-")}.json`;
+      download(name, "application/json", JSON.stringify(lastRun, null, 2));
+    });
+  }
+
+  if (exportJunitBtn) {
+    exportJunitBtn.addEventListener("click", () => {
+      if (!lastRun) return;
+      const name = `junit-report-${new Date(lastRun.startedAt).toISOString().replace(/[:.]/g, "-")}.xml`;
+      download(name, "application/xml", toJUnitXML(lastRun));
+    });
+  }
+</script>
+

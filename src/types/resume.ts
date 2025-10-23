@@ -34,6 +34,7 @@ export interface Project {
   impact: string;
   techStack: string[];
   focus: string[];
+  links?: { repo?: string; demo?: string };
 }
 
 export interface Education {

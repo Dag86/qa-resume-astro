@@ -1,0 +1,55 @@
+Amir Choshov
+ QA Engineer | Santa Clarita, CA
+ Phone: (661) 424-7040 | Email: amirchoshov@gmail.com | LinkedIn
+
+PROFESSIONAL SUMMARY
+-------------------------------------------------------------------------------
+Detail-oriented QA Engineer with 7+ years of experience ensuring quality across web and mobile applications. Skilled in both manual and automated testing, with expertise in designing clear test cases, identifying edge cases, and collaborating with cross-functional teams in Agile environments. Experienced in Cypress and Playwright automation, while maintaining a strong foundation in manual and exploratory testing. Known for adaptability, problem-solving, and a proactive approach to learning new tools and technologies.
+
+TECHNICAL SKILLS
+-------------------------------------------------------------------------------
+Programming & Automation:    JavaScript, TypeScript, Cypress, Playwright, SQL, Postman
+Testing:                    Manual Testing, Exploratory Testing, Regression Suites, 
+   Mobile QA (iOS/Android), Cross-Browser QA
+Debugging & Tools:          Google DevTools, Unix CLI, TestRail, JIRA, Xray
+Databases:                  MongoDB, SQL (basic)
+CI/CD & Collaboration:      GitHub Actions, Agile Ceremonies, Distributed Team Collaboration
+
+PROFESSIONAL EXPERIENCE
+-------------------------------------------------------------------------------
+Zenar Studio Inc. | Remote QA Engineer (Client Projects) | Mar 2018 – Present
+
+Snapiot (Labcorp) – Clinical Trials Platform | Senior QA Engineer | Sep 2019 – Present
+• Designed and executed comprehensive manual test cases for role-based dashboards, 
+  patient questionnaires, and DocuSign workflows
+• Partnered with developers and product managers to define acceptance criteria, 
+  improving clarity and test coverage
+• Conducted exploratory testing across iOS, Android, and web platforms, consistently 
+  identifying high-impact defects
+• Introduced Cypress/Playwright automation for repetitive regression scenarios, 
+  reducing manual workload by 40%
+
+E-Commerce Application | QA Engineer | Oct 2018 – Aug 2019
+• Performed functional, usability, and regression testing on cart, checkout, and 
+  product filtering features
+• Led cross-browser QA across Chrome, Safari, Firefox, and Edge, ensuring a 
+  consistent user experience
+• Debugged API and UI issues using DevTools and Unix CLI, enabling faster root 
+  cause analysis and fixes
+
+Airtime – Social Media Platform | QA Tester | Mar 2018 – Sep 2018
+• Conducted manual smoke, regression, and exploratory testing in a fast-paced 
+  release cycle
+• Authored detailed bug reports and collaborated with developers to resolve UI/UX 
+  issues quickly
+
+EDUCATION
+-------------------------------------------------------------------------------
+Bachelor of Arts in Linguistics | DSU
+
+ADDITIONAL ATTRIBUTES
+-------------------------------------------------------------------------------
+• Quick learner with a proven ability to self-teach new tools and frameworks
+• Strong communication skills, effective in distributed and Agile teams
+• Balanced expertise across manual QA and automation, enabling flexibility for 
+  evolving QA needs

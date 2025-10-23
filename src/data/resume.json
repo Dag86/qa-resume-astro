@@ -81,7 +81,10 @@
       "description": "Created a modular automation harness for API/UI testing and performance probes.",
       "impact": "Reduced flakiness by 70% and CI runtime by 55%.",
       "techStack": ["TypeScript", "ES6", "Playwright", "k6", "GitHub Actions"],
-      "focus": ["Automation Infrastructure", "CI Optimization", "Performance Testing"]
+      "focus": ["Automation Infrastructure", "CI Optimization", "Performance Testing"],
+      "links": {
+      "repo": "https://github.com/Dag86/fullstack-qa-framework"
+    }
     }
   ],
   "education": {

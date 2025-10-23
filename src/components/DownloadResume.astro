@@ -1,0 +1,27 @@
+<!-- /src/components/DownloadResume.astro -->
+---
+const formats = [
+  { label: "PDF",  file: "/Amir_Choshov_QA_Resume.pdf",  mime: "application/pdf" },
+  { label: "DOCX", file: "/Amir_Choshov_QA_Resume.docx", mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+  { label: "TXT",  file: "/Amir_Choshov_QA_Resume.txt",  mime: "text/plain" }
+];
+---
+
+<div class="download-group dropup" data-testid="download-buttons">
+  <button class="btn btn-download" aria-haspopup="true" aria-expanded="false">
+    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M12 3v12m0 0l4-4m-4 4l-4-4M5 21h14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    Download&nbsp;Resume
+  </button>
+
+  <ul class="download-menu" role="menu" aria-label="Download formats">
+    {formats.map(f => (
+      <li role="none">
+        <a role="menuitem" href={f.file} download type={f.mime} class="download-link">
+          {f.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>

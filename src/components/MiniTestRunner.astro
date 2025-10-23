@@ -1,0 +1,65 @@
+---
+// No framework needed; this is a static Astro component with a tiny inline script
+---
+<section id="test-runner" aria-labelledby="test-runner-h" class="card" data-testid="mini-runner">
+  <h2 id="test-runner-h" class="section-title">Mini Test Runner</h2>
+  <p class="muted">Click to simulate three checks. Updates announce via screen reader.</p>
+
+  <div class="runner">
+    <button class="btn" data-testid="run-tests" type="button">▶ Run Tests</button>
+    <div aria-live="polite" aria-atomic="true" class="sr-only" data-testid="aria-live"></div>
+    <ul class="test-log" data-testid="test-log"></ul>
+    <p class="summary" data-testid="summary"></p>
+  </div>
+</section>
+
+<style>
+.runner { margin-top:.75rem; }
+.test-log { list-style:none; padding:0; margin:.75rem 0; display:grid; gap:.4rem; }
+.test-log li { padding:.45rem .6rem; border-radius:8px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.test-log li.pass { background: rgba(0,160,90,.12); border:1px solid rgba(0,160,90,.35); }
+.test-log li.fail { background: rgba(200,40,40,.12); border:1px solid rgba(200,40,40,.35); }
+.summary { margin-top:.5rem; font-weight:600; }
+.sr-only { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+</style>
+
+<script is:inline>
+  (function () {
+    const btn = document.querySelector('[data-testid="run-tests"]');
+    if (!btn) return;
+
+    const log = document.querySelector('[data-testid="test-log"]');
+    const summary = document.querySelector('[data-testid="summary"]');
+    const live = document.querySelector('[data-testid="aria-live"]');
+
+    const tests = [
+      { name: "Login redirects", delay: 350, ok: true },
+      { name: "RBAC for Admin", delay: 400, ok: true },
+      { name: "Report export",  delay: 380, ok: false },
+    ];
+
+    async function run() {
+      btn.disabled = true;
+      log.innerHTML = "";
+      summary.textContent = "";
+      live.textContent = "Starting 3 tests…";
+
+      let pass = 0;
+      for (const t of tests) {
+        await new Promise(r => setTimeout(r, t.delay));
+        const ok = t.ok;
+        const li = document.createElement("li");
+        li.className = ok ? "pass" : "fail";
+        li.textContent = `${t.name} → ${ok ? "PASS" : "FAIL"}`;
+        log.appendChild(li);
+        live.textContent = `${t.name} ${ok ? "passed" : "failed"}.`;
+        if (ok) pass++;
+      }
+      summary.textContent = `Summary: ${pass}/${tests.length} tests passed.`;
+      live.textContent = summary.textContent;
+      btn.disabled = false;
+    }
+
+    btn.addEventListener("click", run);
+  })();
+</script>

@@ -1,8 +1,9 @@
 ---
-interface Props { degree: string; institution: string; }
+export interface Props { degree: string; institution: string }
 const { degree, institution } = Astro.props as Props;
 ---
-<section id="education">
-  <h2>Education</h2>
-  <p><strong>{degree}</strong> – {institution}</p>
+<section id="education" class="card" aria-labelledby="edu-h">
+  <h2 id="edu-h" class="section-title">Education</h2>
+  <p style="margin:.25rem 0;"><strong>{degree}</strong></p>
+  <p class="muted" style="margin:.1rem 0;">{institution}</p>
 </section>

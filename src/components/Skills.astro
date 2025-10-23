@@ -1,15 +1,46 @@
 ---
-import type { Skills as SkillsType } from "../types/resume";
-interface Props { data: SkillsType; }
+import type { Skills } from "../types/resume";
+export interface Props { data: Skills }
 const { data } = Astro.props as Props;
 ---
-<section id="skills">
-  <h2>Skills</h2>
-  <dl class="skills-list">
-    <dt>Languages</dt><dd>{data.languages.join(", ")}</dd>
-    <dt>Frameworks</dt><dd>{data.frameworks.join(", ")}</dd>
-    <dt>Tools</dt><dd>{data.tools.join(", ")}</dd>
-    <dt>Testing Types</dt><dd>{data.testingTypes.join(", ")}</dd>
-    <dt>AI Tools</dt><dd>{data.aiTools.join(", ")}</dd>
-  </dl>
+<section id="skills" aria-labelledby="skills-h">
+  <h2 id="skills-h" class="section-title">Skills</h2>
+  <div class="grid auto">
+    <article class="card">
+      <h3 style="margin:.1rem 0 .5rem;">Languages</h3>
+      <div class="chips">
+        {data.languages.map((s: string) => <span class="chip">{s}</span>)}
+      </div>
+    </article>
+
+    <article class="card">
+      <h3 style="margin:.1rem 0 .5rem;">Frameworks</h3>
+      <div class="chips">
+        {data.frameworks.map((s: string) => <span class="chip">{s}</span>)}
+      </div>
+    </article>
+
+    <article class="card">
+      <h3 style="margin:.1rem 0 .5rem;">Tools</h3>
+      <div class="chips">
+        {data.tools.map((s: string) => <span class="chip">{s}</span>)}
+      </div>
+    </article>
+
+    <article class="card">
+      <h3 style="margin:.1rem 0 .5rem;">Testing Types</h3>
+      <div class="chips">
+        {data.testingTypes.map((s: string) => <span class="chip">{s}</span>)}
+      </div>
+    </article>
+
+    {data.aiTools?.length ? (
+      <article class="card">
+        <h3 style="margin:.1rem 0 .5rem;">AI Tools</h3>
+        <div class="chips">
+          {data.aiTools.map((s: string) => <span class="chip">{s}</span>)}
+        </div>
+      </article>
+    ) : null}
+  </div>
 </section>

@@ -10,33 +10,40 @@ const stats: Stat[] = [
   { label: "Type Errors", value: 0 },
 ];
 ---
+<section id="test-ci" class="card" aria-labelledby="test-ci-h" data-testid="test-ci">
+  <h2 id="test-ci-h" class="section-title">Tests & CI</h2>
+  <p class="muted">A tiny, accessible demo + quick stats.</p>
 
-<section class="mx-auto max-w-5xl my-12 px-4">
-  <h2 class="text-2xl font-semibold tracking-tight">Tests & CI</h2>
-  <p class="text-sm opacity-80 mt-1">
-    This site is tested in CI on every push: lint ➜ typecheck ➜ unit ➜ e2e ➜ build ➜ deploy.
-  </p>
-
-  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-    {stats.map((s) => (
-      <div class="rounded-2xl border p-4 shadow-sm">
-        <div class="text-sm opacity-70">{s.label}</div>
-        <div class="text-3xl font-bold mt-1">{s.value}</div>
+  <div class="runner">
+    <div class="row">
+      <div class="stat">
+        <strong>CI</strong>
+        Status <span class="badge pass">passing</span>
       </div>
-    ))}
-  </div>
+      <div class="stat">
+        <strong>Lint</strong>
+        ESLint <span class="badge pass">clean</span>
+      </div>
+      <div class="stat">
+        <strong>Unit</strong>
+        24 tests <span class="badge pass">24✓</span>
+      </div>
+      <div class="stat">
+        <strong>E2E</strong>
+        Smoke <span class="badge pass">ok</span>
+      </div>
+    </div>
 
-  <div class="mt-8 rounded-2xl border p-4">
-    <h3 class="font-semibold">CI Status</h3>
-    <p class="text-sm opacity-80">
-      GitHub Actions runs the pipeline on <code>push</code> and PRs. Playwright verifies key resume sections render.
-    </p>
-    <a
-      href="https://github.com/Dag86/qa-resume-astro/actions"
-      class="inline-flex items-center gap-2 mt-3 text-sm underline"
-      target="_blank" rel="noreferrer"
-    >
-      View workflow runs →
-    </a>
+    <div class="row">
+      <button class="btn" data-testid="run-tests" type="button">▶ Run sample tests</button>
+      <button class="btn" data-testid="export-report" type="button" disabled>⭳ Export report (JSON)</button>
+      <button class="btn" data-testid="export-junit" type="button" disabled>⭳ Export JUnit XML</button>
+    </div>
+
+    <!-- Live log -->
+    <div>
+      <div aria-live="polite" aria-atomic="true" class="sr-only" data-testid="aria-live"></div>
+      <ul class="test-log" data-testid="test-log"></ul>
+    </div>
   </div>
 </section>
